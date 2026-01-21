@@ -1,0 +1,244 @@
+<!-- MainWindow.xaml -->
+<Window x:Class="MonitoramentoBomba.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Sistema de Monitoramento - Bomba Hidráulica" 
+        Height="800" Width="1400"
+        WindowStartupLocation="CenterScreen"
+        Background="#F5F5F5">
+
+    <Window.Resources>
+        <!-- Estilos -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#CCCCCC" BlurRadius="10" ShadowDepth="2" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+        </Style>
+
+        <Style x:Key="ValueStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="UnitStyle" TargetType="TextBlock">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#666666"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="80"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#1976D2" BorderThickness="0,0,0,3" BorderBrush="#0D47A1">
+            <Grid Margin="20,0">
+                <StackPanel VerticalAlignment="Center">
+                    <TextBlock Text="Sistema IoT de Monitoramento Preditivo" 
+                             FontSize="24" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="Bomba Hidráulica - Planta 1" 
+                             FontSize="14" Foreground="#BBDEFB" Margin="0,5,0,0"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <Ellipse x:Name="StatusIndicator" Width="20" Height="20" Fill="LimeGreen" Margin="0,0,10,0"/>
+                    <TextBlock x:Name="StatusText" Text="CONECTADO" FontSize="14" FontWeight="Bold" 
+                             Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Conteúdo Principal -->
+        <Grid Grid.Row="1" Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Painel Esquerdo - Indicadores em Tempo Real -->
+            <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <!-- Pressão -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Margin="15">
+                            <TextBlock Text="PRESSÃO" Style="{StaticResource TitleStyle}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="Entrada" FontSize="12" Foreground="#666" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="PressaoEntradaValor" Text="0.00" 
+                                             Style="{StaticResource ValueStyle}" Foreground="#2196F3"/>
+                                    <TextBlock Text="bar" Style="{StaticResource UnitStyle}"/>
+                                </StackPanel>
+
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="Saída" FontSize="12" Foreground="#666" HorizontalAlignment="Center"/>
+                                    <TextBlock x:Name="PressaoSaidaValor" Text="0.00" 
+                                             Style="{StaticResource ValueStyle}" Foreground="#4CAF50"/>
+                                    <TextBlock Text="bar" Style="{StaticResource UnitStyle}"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Temperatura -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Margin="15">
+                            <TextBlock Text="TEMPERATURA DO FLUIDO" Style="{StaticResource TitleStyle}"/>
+                            <TextBlock x:Name="TemperaturaValor" Text="0.0" 
+                                     Style="{StaticResource ValueStyle}" Foreground="#FF9800"/>
+                            <TextBlock Text="°C" Style="{StaticResource UnitStyle}"/>
+                            <ProgressBar x:Name="TemperaturaBar" Height="10" Margin="0,10,0,0" 
+                                       Minimum="0" Maximum="100" Value="0" 
+                                       Foreground="#FF9800"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Vibração -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Margin="15">
+                            <TextBlock Text="VIBRAÇÃO" Style="{StaticResource TitleStyle}"/>
+                            <TextBlock x:Name="VibracaoValor" Text="0.000" 
+                                     Style="{StaticResource ValueStyle}" Foreground="#9C27B0"/>
+                            <TextBlock Text="g (aceleração)" Style="{StaticResource UnitStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Vazão -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Margin="15">
+                            <TextBlock Text="VAZÃO" Style="{StaticResource TitleStyle}"/>
+                            <TextBlock x:Name="VazaoValor" Text="0.0" 
+                                     Style="{StaticResource ValueStyle}" Foreground="#00BCD4"/>
+                            <TextBlock Text="L/min" Style="{StaticResource UnitStyle}"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Nível -->
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Margin="15">
+                            <TextBlock Text="NÍVEL DO RESERVATÓRIO" Style="{StaticResource TitleStyle}"/>
+                            <TextBlock x:Name="NivelValor" Text="0" 
+                                     Style="{StaticResource ValueStyle}" Foreground="#3F51B5"/>
+                            <TextBlock Text="%" Style="{StaticResource UnitStyle}"/>
+                            <ProgressBar x:Name="NivelBar" Height="20" Margin="0,10,0,0" 
+                                       Minimum="0" Maximum="100" Value="0" 
+                                       Foreground="#3F51B5"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+
+            <!-- Painel Direito - Gráficos e Alarmes -->
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="200"/>
+                </Grid.RowDefinitions>
+
+                <!-- Área de Gráficos -->
+                <Border Grid.Row="0" Style="{StaticResource CardStyle}">
+                    <Grid Margin="15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="GRÁFICOS DE TENDÊNCIA" Style="{StaticResource TitleStyle}"/>
+
+                        <!-- Aqui você integrará o ScottPlot -->
+                        <Border Grid.Row="1" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="4">
+                            <Grid x:Name="PlotContainer" Background="White">
+                                <!-- ScottPlot será adicionado via code-behind -->
+                                <TextBlock Text="Gráfico será renderizado aqui com ScottPlot" 
+                                         HorizontalAlignment="Center" VerticalAlignment="Center"
+                                         Foreground="#999999" FontStyle="Italic"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <!-- Painel de Alarmes -->
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+                    <Grid Margin="15">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="ALARMES E DIAGNÓSTICO" Style="{StaticResource TitleStyle}"/>
+
+                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                            <ItemsControl x:Name="AlarmesLista">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Background="#FFF3E0" BorderBrush="#FF9800" 
+                                              BorderThickness="1" CornerRadius="4" 
+                                              Padding="10" Margin="0,5">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Tipo}" FontWeight="Bold" 
+                                                         Foreground="#E65100"/>
+                                                <TextBlock Text="{Binding Mensagem}" 
+                                                         TextWrapping="Wrap" Margin="0,5,0,0"/>
+                                                <TextBlock Text="{Binding Hora}" 
+                                                         FontSize="10" Foreground="#666" 
+                                                         HorizontalAlignment="Right"/>
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- Footer -->
+        <Border Grid.Row="2" Background="#263238" BorderThickness="0,3,0,0" BorderBrush="#37474F">
+            <Grid Margin="20,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="Última atualização: " Foreground="#B0BEC5" FontSize="12"/>
+                    <TextBlock x:Name="UltimaAtualizacao" Text="--:--:--" 
+                             Foreground="White" FontSize="12" FontWeight="Bold"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Spacing="15">
+                    <Button Content="CALIBRAR" Width="100" Height="30" 
+                          Background="#4CAF50" Foreground="White" BorderThickness="0" 
+                          FontWeight="Bold" Cursor="Hand"/>
+                    <Button Content="RELATÓRIO" Width="100" Height="30" 
+                          Background="#2196F3" Foreground="White" BorderThickness="0" 
+                          FontWeight="Bold" Cursor="Hand"/>
+                    <Button Content="CONFIGURAR" Width="100" Height="30" 
+                          Background="#757575" Foreground="White" BorderThickness="0" 
+                          FontWeight="Bold" Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>
